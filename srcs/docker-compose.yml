@@ -2,72 +2,44 @@ version: '3'
 
 services:
   nginx:
-    image: nginx
     build:
       context: ./nginx
       dockerfile: ./Dockerfile
     container_name: nginx
-<<<<<<< HEAD
     depends_on:
       - wordpress
-=======
-      # depends_on:
-      #- wordpress
->>>>>>> e407ff829ab5cfd832cc33366b46113324c32d95
     ports:
       - "443:443"
     networks:
       - inception
     volumes:
-<<<<<<< HEAD
-      - ./nginx/conf:/etc/nginx/http.d
-      - /etc/nginx/ssl:/etc/nginx/ssl
-      - /var/www/public/html:/var/www/public/html
-=======
-      - ./conf/:/etc/nginx/conf/
-      - /etc/nginx/ssl:/etc/nginx/ssl/
-        # - wp-volume:/var/www/
->>>>>>> e407ff829ab5cfd832cc33366b46113324c32d95
+      - ./nginx/conf:/etc/nginx/conf
+        #- /etc/nginx/ssl:/etc/nginx/ssl
+      - ./nginx/tools:/etc/nginx/ssl
+      - wp-volume:/var/www/
     env_file:
       - .env
     restart: always
 
   mariadb:
-<<<<<<< HEAD
-    image: mariadb
-=======
->>>>>>> e407ff829ab5cfd832cc33366b46113324c32d95
     build:
       context: ./mariadb
       dockerfile: ./Dockerfile
       args:
-<<<<<<< HEAD
         DB_NAME: ${DB_NAME}
         DB_USER: ${DB_USER}
         DB_PASS: ${DB_PASS}
-        DB_ROOT_PASSWORD: ${DB_ROOT}
-=======
-        MYSQL_DATABASE: ${MYSQL_DATABASE}
-        MYSQL_USER: ${MYSQL_USER}
-        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
->>>>>>> e407ff829ab5cfd832cc33366b46113324c32d95
+        DB_ROOT: ${DB_ROOT}
     container_name: mariadb
     networks:
       - inception
     volumes:
-<<<<<<< HEAD
       - db-volume:/var/lib/mysql
-=======
-      - db-data:/var/lib/mysql
->>>>>>> e407ff829ab5cfd832cc33366b46113324c32d95
     env_file:
       - .env
     restart: always
 
-<<<<<<< HEAD
   wordpress:
-    image: wordpress
     build:
       context: ./wordpress
       dockerfile: ./Dockerfile
@@ -102,40 +74,3 @@ networks:
   inception:
     driver: bridge
 
-=======
-      #  wordpress:
-      #    build:
-      #      context: .
-      #      dockerfile: requirements/wordpress/Dockerfile
-      #      args:
-      #        DB_NAME: ${DB_NAME}
-      #        DB_USER: ${DB_USER}
-      #        DB_PASS: ${DB_PASS}
-      #    container_name: wordpress
-      #    depends_on:
-      #      - mariadb
-      #    networks:
-      #      - inception
-      #    volumes:
-      #      - wp-volume:/var/www/
-      #    env_file:
-      #      - .env
-      #    restart: always
-
-volumes:
-  #  wp-volume:
-  #    driver_opts:
-  #      o: bind
-  #      type: none
-  #      device: /home/${USER}/data/wordpress
-
-  db-data:
-    driver_opts:
-      o: bind
-      type: none
-      device: /home/${USER}/data/mariadb
-
-networks:
-    inception:
-        driver: bridge 
->>>>>>> e407ff829ab5cfd832cc33366b46113324c32d95

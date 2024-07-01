@@ -1,12 +1,9 @@
-<<<<<<< HEAD
-FROM alpine:3.19
-=======
 FROM alpine:3.16
->>>>>>> e407ff829ab5cfd832cc33366b46113324c32d95
 
 ARG DB_NAME \
     DB_USER \
-    DB_PASS
+    DB_PASS \
+    DB_ROOT
 
 RUN apk update && apk add --no-cache mariadb mariadb-client
 
