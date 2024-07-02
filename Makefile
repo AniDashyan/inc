@@ -2,12 +2,12 @@ name = inception
 all:
 	printf "Launch configuration ${name}...\n"
 	bash srcs/wordpress/tools/make_dir.sh
-	docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d
+	docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up
 
 build:
 	@printf "Building configuration ${name}...\n"
 	@bash srcs/wordpress/tools/make_dir.sh
-	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
+	@docker-compose -f ./srcs/docker-compose.yml --env-file srcs/.env up--build
 
 down:
 	@printf "Stopping configuration ${name}...\n"

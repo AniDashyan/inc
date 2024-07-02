@@ -1,11 +1,11 @@
 version: '3'
 
 services:
-  nginx:
+  ninx:
     build:
-      context: ./nginx
-      dockerfile: ./Dockerfile
-    container_name: nginx
+      context: .
+      dockerfile: ./nginx/Dockerfile
+    container_name: ninx
     depends_on:
       - wordpress
     ports:
@@ -13,36 +13,33 @@ services:
     networks:
       - inception
     volumes:
-      - ./nginx/conf:/etc/nginx/conf
-        #- /etc/nginx/ssl:/etc/nginx/ssl
-      - ./nginx/tools:/etc/nginx/ssl
+      - ./nginx/conf/:/etc/nginx/http.d/
+      - ./nginx/tools:/etc/nginx/ssl/
       - wp-volume:/var/www/
-    env_file:
-      - .env
     restart: always
 
   mariadb:
     build:
-      context: ./mariadb
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: ./mariadb/Dockerfile
       args:
         DB_NAME: ${DB_NAME}
         DB_USER: ${DB_USER}
         DB_PASS: ${DB_PASS}
         DB_ROOT: ${DB_ROOT}
     container_name: mariadb
+      # ports:
+      #- "3306:3306"
     networks:
       - inception
     volumes:
       - db-volume:/var/lib/mysql
-    env_file:
-      - .env
     restart: always
 
   wordpress:
     build:
-      context: ./wordpress
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: ./wordpress/Dockerfile
       args:
         DB_NAME: ${DB_NAME}
         DB_USER: ${DB_USER}
@@ -50,8 +47,10 @@ services:
     container_name: wordpress
     depends_on:
       - mariadb
+    networks:
+      - inception
     volumes:
-      - wp-volume:/var/www/html
+      - wp-volume:/var/www/
     env_file:
       - .env
     restart: always
@@ -59,18 +58,16 @@ services:
 volumes:
   wp-volume:
     driver_opts:
-      type: none
       o: bind
+      type: none
       device: /home/${USER}/data/wordpress
 
-
-  db-volume: 
+  db-volume:
     driver_opts:
-      type: none
       o: bind
+      type: none
       device: /home/${USER}/data/mariadb
 
 networks:
-  inception:
-    driver: bridge
-
+    inception:
+        driver: bridge

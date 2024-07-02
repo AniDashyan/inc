@@ -31,7 +31,7 @@ RUN wget https://wordpress.org/latest.zip && \
     unzip latest.zip && \
     cp -rf wordpress/* . && \
     rm -rf wordpress latest.zip
-COPY ./conf/wp-config-create.sh .
+COPY wordpress/conf/wp-config-create.sh .
 RUN sh wp-config-create.sh && rm wp-config-create.sh && \
     chmod -R 0777 wp-content/
 
@@ -40,8 +40,8 @@ RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
 RUN chmod +x wp-cli.phar
 RUN mv wp-cli.phar /usr/local/bin/wp
 
-#COPY ./srcs/wordpress/conf/user.sh ..
-#RUN chmod 777 ../user.sh
-#ENTRYPOINT sh ../user.sh
+COPY ./wordpress/conf/user.sh ..
+RUN chmod 777 ../user.sh
+ENTRYPOINT sh ../user.sh
 
 CMD ["/usr/sbin/php-fpm8", "-F"]
